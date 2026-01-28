@@ -25,3 +25,8 @@ Pour toute question ou problème concernant l'utilisation de BlendView, vous pou
 
 ### Licence
 BlendView est distribué sous la licence MIT. Vous êtes libre de l'utiliser, de le modifier et de le distribuer selon les termes de cette licence.
+
+### Branches
+- `main` : Branche principale contenant la version stable du plugin (non disponible pour le moment).
+- `old`: Première version du plugin de test (non maintenue).
+- `poc`: Branche de preuve de concept avec les fonctionnalités de base pour la génération du RIG de caméra autostéréoscopique (actuellement en développement).
