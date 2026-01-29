@@ -62,3 +62,18 @@ class RigPanelProperties(bpy.types.PropertyGroup):
     Convergence Object: object to converge the cameras on when using toe-in.
     """
 
+    progress: FloatProperty(
+        name="Progression",
+        description="Avancement",
+        default=0.0,
+        min=0.0,
+        max=100.0,
+        subtype='PERCENTAGE'
+    )
+
+    in_render: BoolProperty(
+        name="In Render",
+        default=False,
+        description="Indicates if a rendering process is ongoing"
+    )
+
