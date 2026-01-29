@@ -29,3 +29,4 @@ class RigPanel(Panel):
             layout.prop(rigPanelProperties, "toe_in_object")
 
         layout.operator("blendviews.generate_rig", text="Générer le rig", icon='OUTLINER_OB_CAMERA')
+        layout.operator("blendviews.render_views", text="Rendre les vues", icon='RENDER_STILL')

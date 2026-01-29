@@ -27,5 +27,5 @@ def unregister():
     for elem in elements_to_register:
         bpy.utils.unregister_class(elem)
 
-    del bpy.types.Scene.autostereo_props
+    del bpy.types.Scene.RigPanelProperties
     del bpy.types.Scene.cam_t

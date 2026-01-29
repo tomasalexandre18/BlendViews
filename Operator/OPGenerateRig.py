@@ -53,8 +53,8 @@ class OPGenerateRig(Operator):
             t = i / (nb_views - 1)  # normalized [0, 1]
             offset = (t - 0.5) * baseline_distance
 
-            cam_data = bpy.data.cameras.new(name=f"AutoStereo_Cam_{i}")
-            cam_obj = bpy.data.objects.new(name=f"AutoStereo_Cam_{i}", object_data=cam_data)
+            cam_data = bpy.data.cameras.new(name=f"AutoStereo_Cam_{i+1:02d}")
+            cam_obj = bpy.data.objects.new(name=f"AutoStereo_Cam_{i+1:02d}", object_data=cam_data)
             cam_collection.objects.link(cam_obj)
 
             cam_obj.parent = rig_empty
@@ -74,6 +74,5 @@ class OPGenerateRig(Operator):
                 constraint.target = toe_in_object
                 constraint.track_axis = 'TRACK_NEGATIVE_Z'
                 constraint.up_axis = 'UP_Y'
-
 
         return {'FINISHED'}

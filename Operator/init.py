@@ -1,8 +1,10 @@
 import Operator.OPGenerateRig as OpGenerateRig
+import Operator.OPRenderViews as OpRenderViews
 import bpy
 
 elements_to_register = [
     OpGenerateRig.OPGenerateRig,
+    OpRenderViews.OPRenderViews,
 ]
 
 def register():
