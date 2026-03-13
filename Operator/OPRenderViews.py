@@ -1,9 +1,10 @@
 import os
+import shutil
 
 from bpy.types import Operator
 import bpy
-import mathutils
 import subprocess
+import shutil
 
 def show_message(message, title="Info", icon='INFO'):
     def draw(self, context):
@@ -18,15 +19,25 @@ def redraw_ui(context):
                 if region.type == 'UI':
                     region.tag_redraw()
 
-def render(frame, cam_index, p):
+def clone_blend_file(original_path):
+    base, ext = os.path.splitext(original_path)
+    clone_path = f"{base}_temp{ext}"
+    shutil.copyfile(original_path, clone_path)
+    return clone_path
+
+def delete_clone_file(clone_path):
+    if os.path.exists(clone_path):
+        os.remove(clone_path)
+
+def render(frame, cam_index, p, blend_file):
     if cam_index < 0:
         p.progress = 100.0
         print('-'*20 + " END RENDERING " + '-'*20)
         p.in_render = False
         redraw_ui(bpy.context)
         show_message("Rendering completed successfully!", title="Render Complete", icon='CHECKMARK')
+        delete_clone_file(clone_blend_file(blend_file))
         return
-    blend_file = bpy.data.filepath
     blender = bpy.app.binary_path
     output_path = "//renders/view_{:03d}_frame_{:04d}.png"
 
@@ -48,7 +59,7 @@ def render(frame, cam_index, p):
     print(f"Starting render of camera {cam_index+1} for frame {frame}: {' '.join(cmd)}")
 
     sub = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    bpy.app.timers.register(lambda: check_render(sub, (frame, cam_index-1, p)), first_interval=0.5)
+    bpy.app.timers.register(lambda: check_render(sub, (frame, cam_index-1, p, blend_file)), first_interval=0.5)
 
 def check_render(proc, data):
     if proc.poll() is None:
@@ -63,6 +74,7 @@ def check_render(proc, data):
             data[2].in_render = False
             redraw_ui(bpy.context)
             show_message(f"Rendering failed for camera {data[1]+2}.", title="Render Failed", icon='ERROR')
+            delete_clone_file(clone_blend_file(data[-1]))
             return None
         else:
             print(f"Render of camera {data[1]+2} completed successfully.")
@@ -79,16 +91,19 @@ class OPRenderViews(Operator):
     def execute(self, context):
         # save the blend file
 
-        rigPanelProperties = context.scene.RigPanelProperties
 
+        rigPanelProperties = context.scene.RigPanelProperties
         if rigPanelProperties.in_render:
             self.report({'WARNING'}, "Rendering is already in progress.")
             return {'CANCELLED'}
         rigPanelProperties.in_render = True
         bpy.ops.wm.save_mainfile()
+
+        clone_path = clone_blend_file(bpy.data.filepath)
+        print(f"Cloned blend file to {clone_path} for rendering.")
         nb_views = rigPanelProperties.nb_views
         wm = context.window_manager
         wm.progress_begin(0, nb_views)
         print('-'*20 + " START RENDERING " + '-'*20)
-        render(frame=context.scene.frame_current, cam_index=nb_views - 1, p=rigPanelProperties)
+        render(frame=context.scene.frame_current, cam_index=nb_views - 1, p=rigPanelProperties, blend_file=clone_path)
         return {'FINISHED'}

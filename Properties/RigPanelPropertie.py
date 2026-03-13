@@ -38,7 +38,7 @@ class RigPanelProperties(bpy.types.PropertyGroup):
         description="Number of views to generate in the rig",
         default=5,
         min=2,
-        max=20
+        max=9999999
     )
     """
     Number of Views: number of views to generate in the rig.

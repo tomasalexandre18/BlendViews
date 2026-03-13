@@ -17,7 +17,6 @@ current_dir = os.path.dirname(__file__)
 if current_dir not in sys.path:
     sys.path.append(current_dir)
 
-
 import bpy
 import Properties.init as properties
 import ui.init as ui
